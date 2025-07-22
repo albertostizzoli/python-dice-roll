@@ -1,55 +1,49 @@
-import random # Importo la libreria random per generare numeri casuali
-import tkinter as tk # Imprto la libreria tkinter per l'interfaccia grafica
+import random
+import tkinter as tk
 
-# Funzione per lanciare i dadi
-def lancia_dadi():
-    # Prendo il numero scritto nella casella
-    testo = casella_input.get()
-    
+def anima_dadi(contatore=0):
+    # Anima per circa 1 secondo (10 volte ogni 100 ms)
+    if contatore < 10:
+        risultati = [random.randint(1, 6) for _ in range(int(casella_input.get()))]
+        etichetta_risultato.config(text="🎲 Lancio in corso: " + ", ".join(str(x) for x in risultati))
+        finestra.after(100, anima_dadi, contatore + 1)
+    else:
+        mostra_risultato_finale()
+
+def mostra_risultato_finale():
     try:
-        numero_dadi = int(testo)  # Converto il testo in numero intero
-
-        if numero_dadi <= 1:
-            etichetta_risultato.config(text="Inserisci un numero maggiore di 1.")
+        num = int(casella_input.get())
+        if num <= 1:
+            etichetta_risultato.config(text="⚠ Inserisci un numero maggiore di 1.")
             return
-
-        # Creo una lista con numeri casuali da 1 a 6
-        risultati = []
-        for _ in range(numero_dadi):
-            dado = random.randint(1, 6)
-            risultati.append(dado)
-
-        # Mostro il risultato
-        testo_risultato = "Risultati: " + ", ".join(str(d) for d in risultati)
-        etichetta_risultato.config(text=testo_risultato)
-
+        risultati = [random.randint(1, 6) for _ in range(num)]
+        etichetta_risultato.config(text="✅ Risultato finale: " + ", ".join(str(x) for x in risultati))
     except ValueError:
-        etichetta_risultato.config(text="Per favore, inserisci un numero valido.")
+        etichetta_risultato.config(text="❌ Inserisci un numero valido.")
 
-
-# Inizializzo la finestra principale
+# Interfaccia
 finestra = tk.Tk()
-finestra.title("Lancio dei Dadi") # Titolo della finestra
-finestra.geometry("500x500") # Dimesioni della finestra
+finestra.title("Simulatore Dadi")
+finestra.geometry("400x250")
+finestra.config(bg="#f0f0f0")
 
 # Titolo
-etichetta_benvenuto = tk.Label(finestra, text="LANCIA I DADI 🎲", font=("Arial", 14))
-etichetta_benvenuto.pack(pady=10)
+titolo = tk.Label(finestra, text="LANCIO DEI DADI 🎲", font=("Helvetica", 18, "bold"), bg="#f0f0f0")
+titolo.pack(pady=10)
 
-# Casella di input
-casella_input = tk.Entry(finestra)
+# Input
+casella_input = tk.Entry(finestra, font=("Helvetica", 14), justify="center")
+casella_input.insert(0, "2")
 casella_input.pack()
-casella_input.insert(0, "2")  # Valore iniziale di default
 
-# Pulsante per lanciare i dadi
-pulsante_lancia = tk.Button(finestra, text="Lancia!", command=lancia_dadi)
-pulsante_lancia.pack(pady=10)
+# Pulsante
+pulsante = tk.Button(finestra, text="🎯 Lancia!", font=("Helvetica", 14), bg="#27ae60", fg="white", activebackground="#1e8449", command=anima_dadi)
+pulsante.pack(pady=10)
 
-# Etichetta dove mostro i risultati
-etichetta_risultato = tk.Label(finestra, text="", font=("Arial", 12))
-etichetta_risultato.pack()
+# Risultato
+etichetta_risultato = tk.Label(finestra, text="", font=("Helvetica", 14), bg="#f0f0f0")
+etichetta_risultato.pack(pady=10)
 
-# Avvio della finestra
 finestra.mainloop()
 
 
