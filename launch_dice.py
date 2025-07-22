@@ -14,8 +14,8 @@ def main():
         try:
             # chiedo all'utente quanti dadi vuole lanciare
             num_dice = int(input("QUANTI DADI VUOI LANCIARE?: "))
-            if num_dice <= 0:
-                print("PER FAVORE. INSERISCI UN NUMERO DA 1 A 10.")
+            if num_dice <= 1:
+                print("PER FAVORE. INSERISCI UN NUMERO SOPRA L'1.")
                 continue
             # chiamo la funzione per lanciare i dadi e stampo i risultati
             results = roll_dice(num_dice)
