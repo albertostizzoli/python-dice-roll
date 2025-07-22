@@ -1,23 +1,54 @@
 # PYTHON-DICE-ROLL
 
-### OBIETTIVO
-Creare una semplice interfaccia utente a riga di comando che permetta all’utente di specificare il numero di dadi da lanciare e visualizzare i risultati.
+## 🧠 Obiettivo
+Creare un'applicazione grafica in Python che simuli il lancio di uno o più dadi, permettendo all'utente di:
 
-### SIMULAZIONE
-- Simulare il lancio generando un numero casuale da 1 a 6 per ogni dado
+- Specificare quanti dadi vuole lanciare
+- Visualizzare animazioni e risultati
+- Tenere traccia dello storico
+- Visualizzare statistiche (media e distribuzione)
 
-- Visualizzare i risultati di ogni lancio
+## 🖥️ Interfaccia Grafica
+L'interfaccia è sviluppata con `tkinter`, la libreria GUI standard di Python.  
+È user-friendly e mostra:
 
-### PASSAGGI
+- Un campo per l'inserimento del numero di dadi
+- Un pulsante per lanciare i dadi
+- Una sezione con i risultati correnti
+- Uno storico dei lanci
+- Statistiche aggiornate automaticamente
 
-1: IMPORTARE LA LIBRERIA RANDOM: Utilizzare la libreria random per generare i numeri casuali.
+## 🧪 Funzionalità Principali
 
-2: CREAZIONE DEL PROGRAMMA:
+- ⚙️ **Lancio animato** dei dadi (con effetto di attesa)
+- 🕓 **Storico visivo** dei lanci
+- 📊 **Statistiche** in tempo reale:
+  - Media dei risultati
+  - Distribuzione da 1 a 6
+- 🔁 **Reset dello storico** con un click
 
-- Chiedere all’utente di specificare il numero di dadi da lanciare.
-- Generare un numero casuale tra 1 e 6 per ogni dado.
-- Visualizzare i risultati del lancio.
-- Decidere se lanciare di nuovo o terminare il programma.
+## 📝 Come funziona
+
+1. L'utente inserisce il numero di dadi da lanciare
+2. Il programma anima un lancio con numeri casuali (1-6)
+3. Mostra il risultato finale
+4. Aggiorna lo storico e calcola:
+   - 📈 Media totale dei valori lanciati
+   - 📌 Quanti "1", "2", "3"... sono stati lanciati
+
+## 📦 Librerie Utilizzate
+
+- `random`: per generare numeri casuali da 1 a 6
+- `tkinter`: per creare l'interfaccia grafica
+- `collections.Counter`: per contare la frequenza dei risultati
+
+## ▶️ Come eseguire
+
+Assicurati di avere Python 3 installato.  
+Poi esegui:
+
+```bash
+python launch_dice.py
 
 
 
