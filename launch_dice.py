@@ -2,119 +2,119 @@ import random # Per generare numeri casuali
 import tkinter as tk # Per creare l'interfaccia grafica
 from collections import Counter # Per contare le occorrenze dei risultati
 
-storico = []  # Lista per tenere tutti i valori numerici lanciati
+history = []  # Lista per tenere tutti i valori numerici lanciati
 
 # Funzione per animare il lancio dei dadi
-def anima_dadi(contatore=0):
-    if contatore < 10:
+def animate_dice(counter=0):
+    if counter == 0:
         try:
-            numero = int(casella_input.get()) # chiedo all'utente il numero di dadi da lanciare
-            risultati = [random.randint(1, 6) for _ in range(numero)]
-            etichetta_risultato.config(text="🎲 Lancio in corso: " + ", ".join(str(x) for x in risultati))
-            finestra.after(100, anima_dadi, contatore + 1) # il tempo di attesa tra i lanci 
+            number = int(input_box.get())
+            if not (1 <= number <= 10):
+                result_label.config(text="⚠ Puoi inserire solo un numero da 1 a 10.")
+                return
         except ValueError:
-            etichetta_risultato.config(text="❌ Inserisci un numero valido.")
-    else:
-        mostra_risultato_finale()
-
-# Funzione per mostrare il risultato finale dopo l'animazione
-def mostra_risultato_finale():
-    try:
-        numero = int(casella_input.get())
-        if numero <= 1:
-            etichetta_risultato.config(text="⚠ Inserisci un numero maggiore di 1.") # l'utente deve inserire un numero maggiore di 1
+            result_label.config(text="❌ Inserisci un numero valido.")
             return
 
-        risultati = [random.randint(1, 6) for _ in range(numero)] # lancio dei dadi
-        testo_risultato = "✅ Risultato finale: " + ", ".join(str(x) for x in risultati) # testo che mostra i risultati finali
-        etichetta_risultato.config(text=testo_risultato)
+    if counter < 10:
+        number = int(input_box.get()) # ottenuto dal campo di input il numero di dadi 
+        results = [random.randint(1, 6) for _ in range(number)]
+        result_label.config(text="🎲 Lancio in corso: " + ", ".join(str(x) for x in results))
+        window.after(100, animate_dice, counter + 1)
+    else:
+        show_final_result()
 
-        # salvo i risultati numerici
-        storico.extend(risultati)
 
-        # aggiungo allo storico i risultati
-        lista_storico.insert(tk.END, testo_risultato)
+# Funzione per mostrare il risultato finale dopo l'animazione
+def show_final_result():
+    number = int(input_box.get())  # è già stato validato in anima_dadi
+    results = [random.randint(1, 6) for _ in range(number)]
+    result_text = "✅ Risultato finale: " + ", ".join(str(x) for x in results)
+    result_label.config(text=result_text)
 
-        # Aggiorno le statistiche
-        aggiorna_statistiche()
+    # salvo i risultati numerici
+    history.extend(results)
 
-    except ValueError:
-        etichetta_risultato.config(text="❌ Inserisci un numero valido.")
+    # aggiungo allo storico i risultati
+    history_list.insert(tk.END, result_text)
+
+    # Aggiorno le statistiche
+    update_stats()
+
 
 # Funzione per aggiornare le statistiche
-def aggiorna_statistiche():
-    if not storico:
-        etichetta_media.config(text="• Media: -")
-        etichetta_distribuzione.config(text="• Distribuzione: -")
+def update_stats():
+    if not history:
+        average_label.config(text="• Media: -")
+        distribution_label.config(text="• Distribuzione: -")
         return
 
-    media = sum(storico) / len(storico) # calcolo della media dei risultati
-    conta = Counter(storico) # conteggio delle occorrenze dei risultati
-    distribuzione = " | ".join(f"{num}: {conta.get(num, 0)}x" for num in range(1, 7)) # distribuzione dei risultati
-    etichetta_media.config(text=f"• Media: {media:.2f}")
-    etichetta_distribuzione.config(text=f"• Distribuzione: {distribuzione}")
+    average = sum(history) / len(history) # calcolo della media dei risultati
+    count = Counter(history) # conteggio delle occorrenze dei risultati
+    distribution = " | ".join(f"{num}: {count.get(num, 0)}x" for num in range(1, 7)) # distribuzione dei risultati
+    average_label.config(text=f"• Media: {average:.2f}")
+    distribution_label.config(text=f"• Distribuzione: {distribution}")
 
 # Funzione per resettare lo storico
-def resetta_storico():
-    storico.clear() # pulisco la lista dei risultati
-    lista_storico.delete(0, tk.END) # pulisco la lista dello storico
-    etichetta_risultato.config(text="📄 Storico cancellato.")
-    aggiorna_statistiche() # aggiorno le statistiche dopo il reset
+def reset_history():
+    history.clear() # pulisco la lista dei risultati
+    history_list.delete(0, tk.END) # pulisco la lista dello storico
+    result_label.config(text="📄 Storico cancellato.")
+    update_stats() # aggiorno le statistiche dopo il reset
 
 # Da qui inizia l'interfaccia grafica con la libreria tkinter 
 
 # === Interfaccia ===
-finestra = tk.Tk()
-finestra.title("Simulatore Lancio di Dadi") # Titolo
-finestra.geometry("630x600") # Dimensioni
-finestra.config(bg="#f0f0f0") # Colore sfondo 
+window = tk.Tk()
+window.title("Simulatore Lancio di Dadi") # Titolo
+window.geometry("630x600") # Dimensioni
+window.config(bg="#f0f0f0") # Colore sfondo 
 
 # Titolo
-titolo = tk.Label(finestra, text="LANCIO DEI DADI 🎲", font=("Helvetica", 18, "bold"), bg="#f0f0f0") # stile CSS 
-titolo.pack(pady=10) # Spaziatura verticale (padding)
+title = tk.Label(window, text="LANCIO DEI DADI 🎲", font=("Helvetica", 18, "bold"), bg="#f0f0f0") # stile CSS 
+title.pack(pady=10) # Spaziatura verticale (padding)
 
 # Input
-casella_input = tk.Entry(finestra, font=("Helvetica", 14), justify="center")
-casella_input.insert(0, "2") # Numero di default
-casella_input.pack()
+input_box = tk.Entry(window, font=("Helvetica", 14), justify="center")
+input_box.insert(0, "2") # Numero di default
+input_box.pack()
 
 # Pulsante lancio
-pulsante = tk.Button(finestra, text="🎯 Lancia!", font=("Helvetica", 14), bg="#27ae60", fg="white", activebackground="#1e8449", command=anima_dadi)
-pulsante.pack(pady=10)
+launch_button = tk.Button(window, text="🎯 Lancia!", font=("Helvetica", 14), bg="#27ae60", fg="white", activebackground="#1e8449", command=animate_dice)
+launch_button.pack(pady=10)
 
 # Risultato corrente
-etichetta_risultato = tk.Label(finestra, text="", font=("Helvetica", 14), bg="#f0f0f0")
-etichetta_risultato.pack(pady=5)
+result_label = tk.Label(window, text="", font=("Helvetica", 14), bg="#f0f0f0")
+result_label.pack(pady=5)
 
 # Sezione storico
-etichetta_storico = tk.Label(finestra, text="🕓 Storico dei lanci:", font=("Helvetica", 12, "bold"), bg="#f0f0f0")
-etichetta_storico.pack()
+history_label = tk.Label(window, text="🕓 Storico dei lanci:", font=("Helvetica", 12, "bold"), bg="#f0f0f0")
+history_label.pack()
 
-lista_storico = tk.Listbox(finestra, width=60, height=6, font=("Courier", 10))
-lista_storico.pack(pady=5)
+history_list = tk.Listbox(window, width=60, height=6, font=("Courier", 10))
+history_list.pack(pady=5)
 
 # === Separatore visivo ===
-separator = tk.Frame(finestra, height=2, bd=1, relief="sunken", bg="#d0d0d0")
+separator = tk.Frame(window, height=2, bd=1, relief="sunken", bg="#d0d0d0")
 separator.pack(fill="x", padx=20, pady=10)
 
 # === Sezione Statistiche ===
-etichetta_titolo_statistiche = tk.Label(finestra, text="📊 Statistiche", font=("Helvetica", 14, "bold"), bg="#f0f0f0", fg="#2c3e50")
-etichetta_titolo_statistiche.pack(pady=(5, 3))
+stats_title_label = tk.Label(window, text="📊 Statistiche", font=("Helvetica", 14, "bold"), bg="#f0f0f0", fg="#2c3e50")
+stats_title_label.pack(pady=(5, 3))
 
-etichetta_media = tk.Label(finestra, text="• Media: -", font=("Helvetica", 12), bg="#f0f0f0")
-etichetta_media.pack(pady=2)
+average_label = tk.Label(window, text="• Media: -", font=("Helvetica", 12), bg="#f0f0f0")
+average_label.pack(pady=2)
 
-etichetta_distribuzione = tk.Label(finestra, text="• Distribuzione: -", font=("Helvetica", 12), bg="#f0f0f0")
-etichetta_distribuzione.pack(pady=2)
+distribution_label = tk.Label(window, text="• Distribuzione: -", font=("Helvetica", 12), bg="#f0f0f0")
+distribution_label.pack(pady=2)
 
 # === Separatore visivo ===
-separator = tk.Frame(finestra, height=2, bd=1, relief="sunken", bg="#d0d0d0")
+separator = tk.Frame(window, height=2, bd=1, relief="sunken", bg="#d0d0d0")
 separator.pack(fill="x", padx=20, pady=10)
 
 # Pulsante reset
-pulsante_reset = tk.Button(finestra, text="🗑 Cancella Storico", font=("Helvetica", 10), bg="#e74c3c", fg="white", activebackground="#c0392b", command=resetta_storico)
-pulsante_reset.pack(pady=5)
+reset_button = tk.Button(window, text="🗑 Cancella Storico", font=("Helvetica", 10), bg="#e74c3c", fg="white", activebackground="#c0392b", command=reset_history)
+reset_button.pack(pady=5)
 
 # Avvio il lopp principale dell'interfaccia grafica
-finestra.mainloop()
-
+window.mainloop()
